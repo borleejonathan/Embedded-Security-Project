@@ -21,9 +21,12 @@ Il existe plusieurs techniques qui vont permettre de pouvoir retrouver cette phr
   Contrairement au side-channel analysis, on modifie l’environnement pour forcer une défaillance, pas seulement on l’observe.
 
 Par la suite on va utiliser le concept de single power analysis
-## Utilisation du ChipWhisperer
+## ChipWhisperer Nano
 
+![chipwhisperer](img/chip.jfif)
 
+L'utilisation du ChipWhisperer Nano est crucial et permet de permet d’observer la consommation du ATmega328P en capturant la courbe de courant pendant la vérification du mot de passe afin d’y repérer des motifs tels que des boucles, des lectures mémoire ou des opérations dépendantes des données. 
+Il sert aussi à analyser statistiquement ces traces : on automatise la corrélation entre des hypothèses sur des octets ou des bits du secret et des milliers de traces pour extraire des clés ou valeurs cachées. 
 
 ## Attack tree
 
