@@ -32,7 +32,7 @@ Dans un premier temps il va falloir implémenter le firmware dans l'arduino uno
 
 Le diagramme ci‑dessous présente l’attack tree de notre coffre:
 
-![attack tree](img/diagramme.png)
+![attack tree](img/diagramme.drawio.png)
 
 
 ## 📦 Installation
