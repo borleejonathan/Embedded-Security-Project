@@ -6,7 +6,7 @@ Le but du projet est de réaliser une attaque pratique contre un Arduino Uno qui
 
 ## Comment faire pour réaliser cette attaque?
 
-Il existe plusieurs techniques qui vont permettre de pouvoir retouver cette phrase secrète. Mais dans le cas présent, les 2 types d'attaques principales sont:
+Il existe plusieurs techniques qui vont permettre de pouvoir retrouver cette phrase secrète. Mais dans le cas présent, les 2 types d'attaques principales sont:
 
 - Single power analysis:
   
@@ -22,20 +22,31 @@ Il existe plusieurs techniques qui vont permettre de pouvoir retouver cette phra
 
 Par la suite on va utiliser le concept de single power analysis
 
-## Flash the firmware on the target
-
-Dans un premier temps il va falloir implémenter le firmware dans l'arduino uno
-
-```avrdude -v -patmega328p -carduino -P/dev/ttyACM0 -b115200 -Uflash:w:firmware.elf```
-
 ## Attack tree
 
 Le diagramme ci‑dessous présente l’attack tree de notre coffre:
 
 ![attack tree](img/Diagramme.drawio.png)
 
+## Flash the firmware on the target
 
-## 📦 Installation
-1. Clone le dépôt :
-   ```bash
-   git clone https://github.com/ton-nom-utilisateur/ton-repo.git
+Dans un premier temps il va falloir implémenter le firmware dans l'arduino uno
+
+```avrdude -v -patmega328p -carduino -P/dev/ttyACM0 -b115200 -Uflash:w:firmware.elf```
+
+## Schématique du montage
+
+Le schéma représente le montage qui va permettre d'analyser la puissance pour bypasser le password
+
+![schematic](img/schematic.png)
+
+Des résistances de 100 ohm et des capacités entre 100 et 300 µF sont utilisées
+Quelques ajouts sont à effectuer pour que le montage soit complet:
+- Une connexion entre la pin 2 du Chip whisperer(CW) et la masse de la breadboard
+- Une connexion entre la pin 8 du CW et l'alimentation de 5V de la breadboard
+- Une connexion entre la pin 10 du CW et la broche 17 de l'ATMEGA
+- Une connexion entre la pin 12 du CW et la broche 16 de l'ATMEGA
+
+## Contre mesures
+
+
