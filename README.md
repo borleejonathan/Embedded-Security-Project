@@ -21,6 +21,9 @@ Il existe plusieurs techniques qui vont permettre de pouvoir retrouver cette phr
   Contrairement au side-channel analysis, on modifie l’environnement pour forcer une défaillance, pas seulement on l’observe.
 
 Par la suite on va utiliser le concept de single power analysis
+## Utilisation du ChipWhisperer
+
+
 
 ## Attack tree
 
@@ -47,6 +50,13 @@ Quelques ajouts sont à effectuer pour que le montage soit complet:
 - Une connexion entre la pin 8 du CW et l'alimentation de 5V de la breadboard
 - Une connexion entre la pin 10 du CW et la broche 17 de l'ATMEGA
 - Une connexion entre la pin 12 du CW et la broche 16 de l'ATMEGA
+
+
+## Vulnerability severity assessment
+
+Selon l’évaluation CVSS 4.0, la vulnérabilité obtient un score de 3.7 (Low).
+Bien que l’attaque permette la divulgation complète du secret stocké, elle requiert un accès physique au dispositif, un équipement spécialisé (ChipWhisperer, oscilloscope, sonde de courant) et des compétences avancées en analyse de canaux auxiliaires.
+Ces conditions limitent considérablement la probabilité d’exploitation réelle, d’où la sévérité faible attribuée par le score CVSS
 
 ## Contre mesures
 
