@@ -8,7 +8,7 @@ Le but du projet est de réaliser une attaque pratique contre un Arduino Uno qui
 
 Il existe plusieurs techniques qui vont permettre de pouvoir retrouver cette phrase secrète. Mais dans le cas présent, les 2 types d'attaques principales sont:
 
-- Single power analysis:
+- Single power analysis (SPA):
   
   Une attaque par canal auxiliaire qui exploite une seule trace de consommation électrique mesurée pendant l’exécution d’un algorithme sur un microcontrôleur.
   En observant la forme temporelle de cette trace, on peut identifier quelles instructions ou quelles opérations ont été exécutées,
@@ -25,7 +25,7 @@ Par la suite on va utiliser le concept de single power analysis
 
 ![chipwhisperer](img/chip.jfif)
 
-L'utilisation du ChipWhisperer Nano est crucial et permet de permet d’observer la consommation du ATmega328P en capturant la courbe de courant pendant la vérification du mot de passe afin d’y repérer des motifs tels que des boucles, des lectures mémoire ou des opérations dépendantes des données. 
+L'utilisation du ChipWhisperer Nano est crucial et permet d’observer la consommation du ATmega328P en capturant la courbe de courant pendant la vérification du mot de passe afin d’y repérer des motifs tels que des boucles, des lectures mémoire ou des opérations dépendantes des données. 
 Il sert aussi à analyser statistiquement ces traces : on automatise la corrélation entre des hypothèses sur des octets ou des bits du secret et des milliers de traces pour extraire des clés ou valeurs cachées. 
 
 ## Attack tree
@@ -53,6 +53,8 @@ Quelques ajouts sont à effectuer pour que le montage soit complet:
 - Une connexion entre la pin 8 du CW et l'alimentation de 5V de la breadboard
 - Une connexion entre la pin 10 du CW et la broche 17 de l'ATMEGA
 - Une connexion entre la pin 12 du CW et la broche 16 de l'ATMEGA
+
+## Attack(s) description and implementation
 
 
 ## Vulnerability severity assessment
