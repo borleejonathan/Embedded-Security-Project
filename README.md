@@ -1,6 +1,6 @@
 # Projet sécurité embarquée
 
-![Description de l’image](img/arduino.avif)
+![carte arduino](img/arduino.avif)
 
 Le but du projet est de réaliser une attaque pratique contre un Arduino Uno qui contient une phrase secrète (hash et salt associé). 
 
@@ -28,10 +28,12 @@ Dans un premier temps il va falloir implémenter le firmware dans l'arduino uno
 
 ```avrdude -v -patmega328p -carduino -P/dev/ttyACM0 -b115200 -Uflash:w:firmware.elf```
 
-## ⚙️ Matériel / Technologies
-- Arduino Mega
-- Capteurs ultrason / GPS NEO 6M / capteurs d’humidité
-- Librairies utilisées : `VarSpeedServo`, `Adafruit_SSD1306`, etc.
+## Attack tree
+
+Le diagramme ci‑dessous présente l’attack tree de notre coffre:
+
+![attack tree](img/diagramme.png)
+
 
 ## 📦 Installation
 1. Clone le dépôt :
