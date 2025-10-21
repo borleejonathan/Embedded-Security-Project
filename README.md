@@ -20,10 +20,11 @@ Il existe plusieurs techniques qui vont permettre de pouvoir retouver cette phra
 
 Par la suite on va utiliser le concept de single power analysis
 
-## 🚀 Fonctionnalités
-- Décrire les principales fonctionnalités
-- Exemple : collecte de données GPS et humidité du sol
-- Exemple : affichage sur écran OLED
+## Flash the firmware on the target
+
+Dans un premier temps il va falloir implémenter le firmware dans l'arduino uno
+
+```avrdude -v -patmega328p -carduino -P/dev/ttyACM0 -b115200 -Uflash:w:firmware.elf```
 
 ## ⚙️ Matériel / Technologies
 - Arduino Mega
