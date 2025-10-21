@@ -1,5 +1,7 @@
 # Projet sécurité embarquée
 
+![Description de l’image](img/arduino.avif)
+
 Le but du projet est de réaliser une attaque pratique contre un Arduino Uno qui contient une phrase secrète (hash et salt associé). 
 
 ## Comment faire pour réaliser cette attaque?
