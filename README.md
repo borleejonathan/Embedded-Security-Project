@@ -90,10 +90,12 @@ source: https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator
 CVSS v4.0 Score: 1.5 (Low)
 ### CVSS v4.0 Vector
 ```CVSS:4.0/AV:P/AC:H/AT:P/PR:N/UI:N/VC:H/VI:L/VA:N/SC:L/SI:N/SA:N/E:P/CR:H/IR:M/AR:L/MAV:P/MAC:H/MAT:P/MPR:N/MUI:N/MVC:H/MVA:L/MSC:L/MSI:L/MSA:N/S:N/AU:N/R:I```
+
 CVSS v4.0 Score: 1.5 (Low)
+
 ### Metrics Justifications
 
-### Exploitability Metrics
+### Base Metrics
 | Metric | Value | Justification |
 |--------|-------|---------------|
 | Attack Vector (AV) | Physical (P) | Accès physique requis pour connecter sondes / programmer / glitcher. |
@@ -107,26 +109,38 @@ CVSS v4.0 Score: 1.5 (Low)
 | Subsequent Confidentiality (SC) | Low (L) | Divulgation du secret pourrait faciliter attaques secondaires, mais scope limité. |
 | Subsequent Integrity (SI) | Low (L) | Possibilité limitée de falsification d’autres systèmes via ce secret. |
 | Subsequent Availability (SA) | None (N) | Pas d’impact attendu sur la disponibilité de systèmes tiers. |
+
+### Supplemental Metrics
+
 | Safety (S) | None (N) | Pas d’impact physique / risque pour les personnes. |
 | Automatable (AU) | No (N) | Besoin d’intervention humaine et d’ajustements, pas automatisable. |
 | Recovery (R) | Irrecoverable (I) | Si la keyphrase est divulguée, elle doit être régénérée — impact permanent. |
 | Value Density (V) | High (H) | Secret unique et à forte valeur (accès au vault / preuve d’attaque). |
 | Vulnerability Response Effort (RE) | Moderate (M) | Corriger nécessite modification firmware + ajout hardware (BOD, filtres, masking). |
 | Provider Urgency (U) | Medium (M) | Haute valeur du secret mais exploitation difficile → urgence modérée. |
-| Modified Attack Vector (MAV) | Physical (P) | Même contraintes locales que pour le cas de base. |
-| Modified Attack Complexity (MAC) | High (H) | Attaque complexe et nécessite calibration / compétence. |
-| Modified Attack Requirements (MAT) | Present (P) | Matériel spécialisé toujours nécessaire. |
-| Modified Privileges Required (MPR) | None (N) | Pas de privilèges logiciels requis. |
-| Modified User Interaction (MUI) | None (N) | Pas besoin d’utilisateur pour exploiter. |
-| Modified Confidentiality (MVC) | High (H) | Confidentialité critique dans l’environnement. |
-| Modified Integrity (MVI) | Medium (M) | Intégrité importante (firmware) mais secondaire. |
-| Modified Availability (MVA) | Low (L) | Disponibilité souhaitée mais impact limité. |
-| Modified Subsequent Confidentiality (MSC) | Low (L) | Impacts secondaires limités. |
-| Modified Subsequent Integrity (MSI) | Low (L) | Impacts secondaires limités. |
-| Modified Subsequent Availability (MSA) | None (N) | Pas d’impact secondaire. |
+
+### Environmental (Modified Base Metrics)
+
+| Attack Vector (MAV) | Physical (P) | Même contraintes locales que pour le cas de base. |
+| Attack Complexity (MAC) | High (H) | Attaque complexe et nécessite calibration / compétence. |
+| Attack Requirements (MAT) | Present (P) | Matériel spécialisé toujours nécessaire. |
+| Privileges Required (MPR) | None (N) | Pas de privilèges logiciels requis. |
+| User Interaction (MUI) | None (N) | Pas besoin d’utilisateur pour exploiter. |
+| Confidentiality (MVC) | High (H) | Confidentialité critique dans l’environnement. |
+| Integrity (MVI) | Medium (M) | Intégrité importante (firmware) mais secondaire. |
+| Availability (MVA) | Low (L) | Disponibilité souhaitée mais impact limité. |
+| Subsequent Confidentiality (MSC) | Low (L) | Impacts secondaires limités. |
+| Subsequent Integrity (MSI) | Low (L) | Impacts secondaires limités. |
+| Subsequent Availability (MSA) | None (N) | Pas d’impact secondaire. |
+
+### Environmental (Security Requirements)
+
 | Confidentiality Requirements (CR) | High (H) | L’objectif du vault est de protéger la confidentialité du secret. |
 | Integrity Requirements (IR) | Medium (M) | Intégrité importante mais moins critique que confidentialité. |
 | Availability Requirements (AR) | Low (L) | Disponibilité non critique par rapport à la confidentialité. |
+
+### Threat Metrics
+
 | Exploit Maturity (E) | Proof-of-Concept (POC) | Exploitation démontrable en labo avec équipement et scripts, mais pas triviale ni largement diffusée. |
 
 
