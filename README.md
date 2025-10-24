@@ -106,9 +106,9 @@ CVSS v4.0 Score: 1.5 (Low)
 | Confidentiality (VC) | High (H) | Divulgation possible de la keyphrase / hash+salt. |
 | Integrity (VI) | Low (L) | L’exploitation vise la divulgation ; modification firmware possible mais pas prioritaire. |
 | Availability (VA) | None (N) | Attaque ne vise pas à interrompre le service. |
-| Subsequent Confidentiality (SC) | Low (L) | Divulgation du secret pourrait faciliter attaques secondaires, mais scope limité. |
-| Subsequent Integrity (SI) | Low (L) | Possibilité limitée de falsification d’autres systèmes via ce secret. |
-| Subsequent Availability (SA) | None (N) | Pas d’impact attendu sur la disponibilité de systèmes tiers. |
+| Confidentiality (SC) | Low (L) | Divulgation du secret pourrait faciliter attaques secondaires, mais scope limité. |
+| Integrity (SI) | Low (L) | Possibilité limitée de falsification d’autres systèmes via ce secret. |
+| Availability (SA) | None (N) | Pas d’impact attendu sur la disponibilité de systèmes tiers. |
 
 ### Supplemental Metrics
 
@@ -118,8 +118,7 @@ CVSS v4.0 Score: 1.5 (Low)
 | Automatable (AU) | No (N) | Besoin d’intervention humaine et d’ajustements, pas automatisable. |
 | Recovery (R) | Irrecoverable (I) | Si la keyphrase est divulguée, elle doit être régénérée — impact permanent. |
 | Value Density (V) | High (H) | Secret unique et à forte valeur (accès au vault / preuve d’attaque). |
-| Vulnerability Response Effort (RE) | Moderate (M) | Corriger nécessite modification firmware + ajout hardware (BOD, filtres, masking). |
-| Provider Urgency (U) | Medium (M) | Haute valeur du secret mais exploitation difficile → urgence modérée. |
+| Vulnerability Response Effort (RE) | Moderate (M) | Corriger nécessite modification firmware + ajout hardware. |
 
 ### Environmental (Modified Base Metrics)
 
@@ -131,11 +130,11 @@ CVSS v4.0 Score: 1.5 (Low)
 | Privileges Required (MPR) | None (N) | Pas de privilèges logiciels requis. |
 | User Interaction (MUI) | None (N) | Pas besoin d’utilisateur pour exploiter. |
 | Confidentiality (MVC) | High (H) | Confidentialité critique dans l’environnement. |
-| Integrity (MVI) | Medium (M) | Intégrité importante (firmware) mais secondaire. |
+| Integrity (MVI) | Not Defined (X) | Intégrité importante (firmware) mais secondaire. |
 | Availability (MVA) | Low (L) | Disponibilité souhaitée mais impact limité. |
-| Subsequent Confidentiality (MSC) | Low (L) | Impacts secondaires limités. |
-| Subsequent Integrity (MSI) | Low (L) | Impacts secondaires limités. |
-| Subsequent Availability (MSA) | None (N) | Pas d’impact secondaire. |
+| Confidentiality (MSC) | Low (L) | Impacts secondaires limités. |
+| Integrity (MSI) | Low (L) | Impacts secondaires limités. |
+| Availability (MSA) | Negligible (N) | Pas d’impact secondaire. |
 
 ### Environmental (Security Requirements)
 
