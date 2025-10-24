@@ -78,7 +78,7 @@ Objectif : Utiliser Simple Power Analysis pour repérer la routine de comparaiso
 - Le caractère qui provoque la plus longue exécution est très probablement le bon caractère pour la position 1.
 - Répéter pour la position 2, etc., jusqu’à reconstituer la chaîne complète.
 
-## Récupération finale & preuves (extraction du hash+salt ou du mot de passe)
+### Récupération finale & preuves (extraction du hash+salt ou du mot de passe)
 
 Objectif : Utiliser le mot de passe reconstitué (via SPA) pour obtenir la sortie finale du vault : Hash + Salt.
 
