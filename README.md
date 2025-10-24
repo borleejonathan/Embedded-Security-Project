@@ -112,6 +112,8 @@ CVSS v4.0 Score: 1.5 (Low)
 
 ### Supplemental Metrics
 
+| Metric | Value | Justification |
+|--------|-------|---------------|
 | Safety (S) | None (N) | Pas d’impact physique / risque pour les personnes. |
 | Automatable (AU) | No (N) | Besoin d’intervention humaine et d’ajustements, pas automatisable. |
 | Recovery (R) | Irrecoverable (I) | Si la keyphrase est divulguée, elle doit être régénérée — impact permanent. |
@@ -121,6 +123,8 @@ CVSS v4.0 Score: 1.5 (Low)
 
 ### Environmental (Modified Base Metrics)
 
+| Metric | Value | Justification |
+|--------|-------|---------------|
 | Attack Vector (MAV) | Physical (P) | Même contraintes locales que pour le cas de base. |
 | Attack Complexity (MAC) | High (H) | Attaque complexe et nécessite calibration / compétence. |
 | Attack Requirements (MAT) | Present (P) | Matériel spécialisé toujours nécessaire. |
@@ -135,12 +139,16 @@ CVSS v4.0 Score: 1.5 (Low)
 
 ### Environmental (Security Requirements)
 
+| Metric | Value | Justification |
+|--------|-------|---------------|
 | Confidentiality Requirements (CR) | High (H) | L’objectif du vault est de protéger la confidentialité du secret. |
 | Integrity Requirements (IR) | Medium (M) | Intégrité importante mais moins critique que confidentialité. |
 | Availability Requirements (AR) | Low (L) | Disponibilité non critique par rapport à la confidentialité. |
 
 ### Threat Metrics
 
+| Metric | Value | Justification |
+|--------|-------|---------------|
 | Exploit Maturity (E) | Proof-of-Concept (POC) | Exploitation démontrable en labo avec équipement et scripts, mais pas triviale ni largement diffusée. |
 
 
