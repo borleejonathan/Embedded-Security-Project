@@ -70,23 +70,22 @@ The project code will allow us to configure
 Constants are first defined in the notebook:
 
 SCOPETYPE = 'OPENADC' specifies the oscilloscope type used (ChipWhisperer Lite or CWNano).
-
 PLATFORM = 'CWNANO' indicates the target hardware platform.
-
 SS_VER = 'SS_VER_2_1' selects the SimpleSerial protocol version.
 
 These parameters ensure compatibility between the software, the hardware, and the firmware to be built.
 
-Experimental environment initialization
+### Experimental environment initialization
 The external script Setup_Generic.ipynb is executed to prepare the hardware and software environment.
 This step automates scope initialization, dependency loading, and configuration of the interfaces required for communication between the analysis workstation and the target.
 
-Target firmware compilation
+### Target firmware compilation
 A Bash cell runs make in the firmware/mcu/basic-passwdcheck directory.
 This builds the firmware specific to the CWNANO platform, without an external crypto module (CRYPTO_TARGET=NONE), and using the selected SimpleSerial version.
 The resulting firmware implements the “vault” logic that prompts for a password and returns the hash of the secret keyphrase together with its salt.
 
-Connection and communication test
+### Connection and communication test
+
 The notebook imports the chipwhisperer library, initializes the scope (cw.scope()) and the target (cw.target(scope, cw.targets.SimpleSerial2)).
 A command is then sent over the serial link to simulate entering a password, and the device response is read and printed.
 This step validates correct hardware/software configuration before any power measurements or differential analyses.
