@@ -56,6 +56,34 @@ Quelques ajouts sont à effectuer pour que le montage soit complet:
 
 ## Attack(s) description and implementation
 
+### Capture des traces d’exécution
+
+Objectif : Capturer des traces de consommation pendant l’exécution de la routine de vérification du mot de passe, pour permettre SPA.
+
+Procédure:
+
+1. Envoyer une entrée : Cas « incorrect » : envoyer une chaîne aléatoire (ex. AAAAA…) et capturer la trace.
+2. Répéter pour plusieurs entrées distinctes pour voir la variabilité.
+3. Si disponible, obtenir une trace « success » : si tu connais le mot de passe ou si tu as un moyen de le forcer, capturer au moins une trace montrant le parcours de succès.
+
+### Analyse SPA 
+
+Objectif : Utiliser Simple Power Analysis pour repérer la routine de comparaison, déterminer si elle fait des opérations dépendantes des données et extraire le mot de passe octet par octet.
+
+1. Visualisation: Ouvrir les traces capturées sur la fenêtre correspondant à la comparaison (utiliser trigger comme repère).
+2. Identifier signatures: Rechercher séquences répétitives : séries d’impulsions ou motifs qui se répètent N fois (N ≈ longueur du mot de passe).
+- Rechercher différences de longueur ou d’amplitude entre « fail » et « success » (signature d’early-exit ou lecture du secret).
+3. Exploitation par brute force par position: Si la routine s’arrête au premier caractère incorrect (early-exit), procéder position par position :
+- Pour la position 1, envoyer différents caractères (0x00 → 0x7F) et mesurer la durée ou la longueur de la séquence dans la trace.
+- Le caractère qui provoque la plus longue exécution est très probablement le bon caractère pour la position 1.
+- Répéter pour la position 2, etc., jusqu’à reconstituer la chaîne complète.
+
+## Récupération finale & preuves (extraction du hash+salt ou du mot de passe)
+
+Objectif : Utiliser le mot de passe reconstitué (via SPA) pour obtenir la sortie finale du vault : Hash + Salt.
+
+A. Si SPA a permis de reconstituer le mot de passe :
+- Saisir le mot de passe reconstitué dans l’interface du vault (via terminal série).
 
 ## Vulnerability severity assessment
 
