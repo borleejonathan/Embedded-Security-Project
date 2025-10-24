@@ -95,6 +95,7 @@ If SPA allowed reconstruction of the password:
 
 ## Vulnerability severity assessment
 source: https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator
+
 CVSS v4.0 Score: 1.5 (Low)
 ### CVSS v4.0 Vector
 ```CVSS:4.0/AV:P/AC:H/AT:P/PR:N/UI:N/VC:H/VI:L/VA:N/SC:L/SI:N/SA:N/E:P/CR:H/IR:M/AR:L/MAV:P/MAC:H/MAT:P/MPR:N/MUI:N/MVC:H/MVA:L/MSC:L/MSI:L/MSA:N/S:N/AU:N/R:I```
