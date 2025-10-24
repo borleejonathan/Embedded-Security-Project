@@ -1,89 +1,97 @@
-# Projet sécurité embarquée
+# Embedded Security Project
 
 ![carte arduino](img/arduino.avif)
 
-Le but du projet est de réaliser une attaque pratique contre un Arduino Uno qui contient une phrase secrète (hash et salt associé). 
+The goal of the project is to perform a practical attack against an Arduino Uno that contains a secret passphrase (hash and associated salt). 
 
-## Comment faire pour réaliser cette attaque?
+## How to carry out this attack?
 
-Il existe plusieurs techniques qui vont permettre de pouvoir retrouver cette phrase secrète. Mais dans le cas présent, les 2 types d'attaques principales sont:
+There are several techniques that will allow recovery of this secret passphrase. But in this case, the two main types of attacks are:
 
 - Single power analysis (SPA):
-  
-  Une attaque par canal auxiliaire qui exploite une seule trace de consommation électrique mesurée pendant l’exécution d’un algorithme sur un microcontrôleur.
-  En observant la forme temporelle de cette trace, on peut identifier quelles instructions ou quelles opérations ont été exécutées,
-  et si ces opérations dépendent d’un secret (par ex. un bit de clé), on peut en déduire ce secret
+
+  A side-channel attack that exploits a single power trace measured during
+  the execution of an algorithm on a microcontroller.
+  By observing the time-domain shape of this trace, one can identify which
+  instructions or operations were executed,
+  and if these operations depend on a secret (e.g. a key bit), one can
+  deduce that secret.
 
 - Fault injection:
-  
-  L’ensemble des techniques visant à provoquer intentionnellement un dysfonctionnement dans un matériel en le faisant fonctionner hors des conditions normales
-  pour tenter d’obtenir un comportement utile (par ex. un contournement de contrôle, la fuite d’un secret, la corruption d’une vérification).
-  Contrairement au side-channel analysis, on modifie l’environnement pour forcer une défaillance, pas seulement on l’observe.
 
-Par la suite on va utiliser le concept de single power analysis
+  The set of techniques aimed at intentionally causing a malfunction in
+  hardware by operating it outside normal conditions
+  to try to obtain a useful behavior (e.g. bypassing a check, leaking a
+  secret, corrupting a verification).
+  Unlike side-channel analysis, we modify the environment to force a
+  failure, not just observe it.
+
+We will subsequently use the concept of single power analysis (SPA).
+
 ## ChipWhisperer Nano
 
 ![chipwhisperer](img/chip.jfif)
 
-L'utilisation du ChipWhisperer Nano est crucial et permet d’observer la consommation du ATmega328P en capturant la courbe de courant pendant la vérification du mot de passe afin d’y repérer des motifs tels que des boucles, des lectures mémoire ou des opérations dépendantes des données. 
-Il sert aussi à analyser statistiquement ces traces : on automatise la corrélation entre des hypothèses sur des octets ou des bits du secret et des milliers de traces pour extraire des clés ou valeurs cachées. 
+The use of the ChipWhisperer Nano is crucial and allows observing the ATmega328P’s power consumption by capturing the current curve during password verification in order to spot patterns such as loops, memory reads or data-dependent operations.
+It is also used to statistically analyze these traces: we automate the correlation between hypotheses on bytes or bits of the secret and thousands of traces to extract hidden keys or values.
 
 ## Attack tree
 
-Le diagramme ci‑dessous présente l’attack tree de notre vault:
+The diagram below shows the attack tree of our vault:
 
 ![attack tree](img/Diagramme.drawio.png)
 
 ## Flash the firmware on the target
 
-Dans un premier temps il va falloir implémenter le firmware dans l'arduino uno
+First, the firmware must be flashed onto the Arduino Uno
 
 ```avrdude -v -patmega328p -carduino -P/dev/ttyACM0 -b115200 -Uflash:w:firmware.elf```
 
-## Schématique du montage
+## Schematic of the setup
 
-Le schéma représente le montage qui va permettre d'analyser la puissance pour bypasser le password
+The schematic represents the setup that will allow power analysis to bypass the password
 
 ![schematic](img/schematic.png)
 
-Des résistances de 100 ohm et des capacités entre 100 et 300 µF sont utilisées.
+100 ohm resistors and capacitors between 100 and 300 µF are used.
 
-Quelques ajouts sont à effectuer pour que le montage soit complet:
-- Une connexion entre la pin 2 du Chip whisperer(CW) et la masse de la breadboard
-- Une connexion entre la pin 8 du CW et l'alimentation de 5V de la breadboard
-- Une connexion entre la pin 10 du CW et la broche 17 de l'ATMEGA
-- Une connexion entre la pin 12 du CW et la broche 16 de l'ATMEGA
+A few additions must be made for the setup to be complete:
+- A connection between ChipWhisperer pin 2 (CW) and the breadboard ground
+- A connection between CW pin 8 and the breadboard 5V supply
+- A connection between CW pin 10 and ATMEGA pin 17
+- A connection between CW pin 12 and ATMEGA pin 16
 
 ## Attack(s) description and implementation
 
-### Capture des traces d’exécution
+### Capture execution traces
 
-Objectif : Capturer des traces de consommation pendant l’exécution de la routine de vérification du mot de passe, pour permettre SPA.
+Objective: Capture power traces during execution of the password verification routine to enable SPA.
 
-Procédure:
+Procedure:
 
-1. Envoyer une entrée : Cas « incorrect » : envoyer une chaîne aléatoire (ex. AAAAA…) et capturer la trace.
-2. Répéter pour plusieurs entrées distinctes pour voir la variabilité.
-3. Si disponible, obtenir une trace « success » : si on connais le mot de passe ou si on a un moyen de le forcer, capturer au moins une trace montrant le parcours de succès.
+1. Send an input — “incorrect” case: send a random string (e.g. AAAAA…) and capture the trace.
+2. Repeat for several distinct inputs to observe variability..
+3. If available, obtain a “success” trace: if we know the password or have a way to force it, capture at least one trace showing the successful path.
 
-### Analyse SPA 
+### SPA Analysis 
 
-Objectif : Utiliser Simple Power Analysis pour repérer la routine de comparaison, déterminer si elle fait des opérations dépendantes des données et extraire le mot de passe octet par octet.
+Objective: Use Simple Power Analysis to locate the comparison routine, determine if it performs data-dependent operations and extract the password byte by byte.
 
-1. Visualisation: Ouvrir les traces capturées sur la fenêtre correspondant à la comparaison (utiliser trigger comme repère).
-2. Identifier signatures: Rechercher séquences répétitives : séries d’impulsions ou motifs qui se répètent N fois (N ≈ longueur du mot de passe).
-- Rechercher différences de longueur ou d’amplitude entre « fail » et « success » (signature d’early-exit ou lecture du secret).
-3. Exploitation par brute force de position: Si la routine s’arrête au premier caractère incorrect (early-exit), procéder position par position :
-- Pour la position 1, envoyer différents caractères (0x00 → 0x7F) et mesurer la durée ou la longueur de la séquence dans la trace.
-- Le caractère qui provoque la plus longue exécution est très probablement le bon caractère pour la position 1.
-- Répéter pour la position 2, etc., jusqu’à reconstituer la chaîne complète.
+1. Visualization: Open the captured traces on the window corresponding to the comparison (use the trigger as a landmark).
+2. Identify signatures: Look for repetitive sequences — series of pulses or motifs that repeat N times (N ≈ length of the password).
+- Look for differences in length or amplitude between “fail” and “success” (signature of early-exit or secret read)
+3. Position brute-force exploitation: If the routine stops at the first incorrect character (early-exit), proceed position by position:
+- For position 1, send different characters (0x00 → 0x7F) and measure the duration or the length of the sequence in the trace.
+- The character that causes the longest execution is most likely the correct character for position 1.
+- Repeat for position 2, etc., until the full string is reconstructed.
 
-### Récupération finale (extraction du hash+salt ou du mot de passe)
+  
+### Final recovery (extracting hash+salt or the password)
 
-Objectif : Utiliser le mot de passe reconstitué (via SPA) pour obtenir la sortie finale du vault : Hash + Salt.
+Objective: Use the reconstructed password (via SPA) to obtain the vault’s final output: Hash + Salt.
 
-Si SPA a permis de reconstituer le mot de passe :
-- Saisir le mot de passe reconstitué dans l’interface du vault (via terminal série).
+If SPA allowed reconstruction of the password:
+- Enter the reconstructed password into the vault interface (via serial terminal).
 
 ## Vulnerability severity assessment
 source: https://nvd.nist.gov/vuln-metrics/cvss/v4-calculator
@@ -98,75 +106,74 @@ CVSS v4.0 Score: 1.5 (Low)
 ### Base Metrics
 | Metric | Value | Justification |
 |--------|-------|---------------|
-| Attack Vector (AV) | Physical (P) | Accès physique requis pour connecter sondes / programmer / glitcher. |
-| Attack Complexity (AC) | High (H) | Compétences et calibrage nécessaires (synchronisation, analyse, matériel). |
-| Attack Requirements (AT) | Present (P) | Matériel spécialisé nécessaire (ChipWhisperer, sonde, câblage). |
-| Privileges Required (PR) | None (N) | Aucun privilège logiciel nécessaire. |
-| User Interaction (UI) | None (N) | Pas besoin d’un utilisateur complice. |
-| Confidentiality (VC) | High (H) | Divulgation possible de la keyphrase / hash+salt. |
-| Integrity (VI) | Low (L) | L’exploitation vise la divulgation ; modification firmware possible mais pas prioritaire. |
-| Availability (VA) | None (N) | Attaque ne vise pas à interrompre le service. |
-| Confidentiality (SC) | Low (L) | Divulgation du secret pourrait faciliter attaques secondaires, mais scope limité. |
-| Integrity (SI) | Low (L) | Possibilité limitée de falsification d’autres systèmes via ce secret. |
-| Availability (SA) | None (N) | Pas d’impact attendu sur la disponibilité de systèmes tiers. |
+| Attack Vector (AV) | Physical (P) | Physical access required to connect probes / program / glitch. |
+| Attack Complexity (AC) | High (H) | Skills and fine tuning required (synchronization, analysis, hardware). |
+| Attack Requirements (AT) | Present (P) | Specialized hardware required (ChipWhisperer, probe, wiring). |
+| Privileges Required (PR) | None (N) | No software privileges required. |
+| User Interaction (UI) | None (N) | No user cooperation required. |
+| Confidentiality (VC) | High (H) | Possible disclosure of the keyphrase / hash+salt. |
+| Integrity (VI) | Low (L) | Exploitation aims at disclosure; firmware modification possible but not primary. |
+| Availability (VA) | None (N) | Attack does not aim to disrupt service. |
+| Confidentiality (SC) | Low (L) | Disclosure of the secret could facilitate secondary attacks, but scope is limited. |
+| Integrity (SI) | Low (L) | Limited possibility to spoof other systems via this secret. |
+| Availability (SA) | None (N) | No expected impact on third-party system availability. |
 
 ### Supplemental Metrics
 
 | Metric | Value | Justification |
 |--------|-------|---------------|
-| Safety (S) | None (N) | Pas d’impact physique / risque pour les personnes. |
-| Automatable (AU) | No (N) | Besoin d’intervention humaine et d’ajustements, pas automatisable. |
-| Recovery (R) | Irrecoverable (I) | Si la keyphrase est divulguée, elle doit être régénérée — impact permanent. |
-| Value Density (V) | High (H) | Secret unique et à forte valeur (accès au vault / preuve d’attaque). |
-| Vulnerability Response Effort (RE) | Moderate (M) | Corriger nécessite modification firmware + ajout hardware. |
+| Safety (S) | None (N) | No physical impact / risk to people. |
+| Automatable (AU) | No (N) | Requires human intervention and adjustments, not automatable. |
+| Recovery (R) | Irrecoverable (I) | If the keyphrase is disclosed, it must be regenerated — permanent impact. |
+| Value Density (V) | High (H) | Unique secret with high value (vault access / proof of attack). |
+| Vulnerability Response Effort (RE) | Moderate (M) | Fix requires firmware modification + hardware additions. |
 
 ### Environmental (Modified Base Metrics)
 
 | Metric | Value | Justification |
 |--------|-------|---------------|
-| Attack Vector (MAV) | Physical (P) | Même contraintes locales que pour le cas de base. |
-| Attack Complexity (MAC) | High (H) | Attaque complexe et nécessite calibration / compétence. |
-| Attack Requirements (MAT) | Present (P) | Matériel spécialisé toujours nécessaire. |
-| Privileges Required (MPR) | None (N) | Pas de privilèges logiciels requis. |
-| User Interaction (MUI) | None (N) | Pas besoin d’utilisateur pour exploiter. |
-| Confidentiality (MVC) | High (H) | Confidentialité critique dans l’environnement. |
-| Integrity (MVI) | Not Defined (X) | Intégrité importante (firmware) mais secondaire. |
-| Availability (MVA) | Low (L) | Disponibilité souhaitée mais impact limité. |
-| Confidentiality (MSC) | Low (L) | Impacts secondaires limités. |
-| Integrity (MSI) | Low (L) | Impacts secondaires limités. |
-| Availability (MSA) | Negligible (N) | Pas d’impact secondaire. |
+| Attack Vector (MAV) | Physical (P) | Same local constraints as the base case. |
+| Attack Complexity (MAC) | High (H) | Complex attack requiring calibration / skill. |
+| Attack Requirements (MAT) | Present (P) | Specialized hardware still required. |
+| Privileges Required (MPR) | None (N) | No software privileges required. |
+| User Interaction (MUI) | None (N) | No user involvement needed to exploit. |
+| Confidentiality (MVC) | High (H) | Confidentiality is critical in the environment. |
+| Integrity (MVI) | Not Defined (X) | Integrity is important (firmware) but secondary. |
+| Availability (MVA) | Low (L) | Availability desired but impact limited. |
+| Confidentiality (MSC) | Low (L) | Secondary impacts are limited. |
+| Integrity (MSI) | Low (L) | Secondary impacts are limited. |
+| Availability (MSA) | Negligible (N) | No secondary impact. |
 
 ### Environmental (Security Requirements)
 
 | Metric | Value | Justification |
 |--------|-------|---------------|
-| Confidentiality Requirements (CR) | High (H) | L’objectif du vault est de protéger la confidentialité du secret. |
-| Integrity Requirements (IR) | Medium (M) | Intégrité importante mais moins critique que confidentialité. |
-| Availability Requirements (AR) | Low (L) | Disponibilité non critique par rapport à la confidentialité. |
+| Confidentiality Requirements (CR) | High (H) | The vault’s purpose is to protect the confidentiality of the secret. |
+| Integrity Requirements (IR) | Medium (M) | Integrity is important but less critical than confidentiality |
+| Availability Requirements (AR) | Low (L) | Availability is not critical compared to confidentiality. |
 
 ### Threat Metrics
 
 | Metric | Value | Justification |
 |--------|-------|---------------|
-| Exploit Maturity (E) | Proof-of-Concept (POC) | Exploitation démontrable en labo avec équipement et scripts, mais pas triviale ni largement diffusée. |
+| Exploit Maturity (E) | Proof-of-Concept (POC) | Exploitation demonstrable in lab with equipment and scripts, but not trivial or widely published. |
 
 
-## Contre mesures
+## Countermeasures
 
-### 1. Exécution en temps constant (no early-exit)
+### 1. Constant-time execution (no early-exit)
 
-Eviter que la durée ou la séquence d’instructions dépende des octets testés (ex: exit anticipé dès qu’un caractère ne correspond pas).
-Ainsi aucune différence visible dans la trace de puissance ou le timing ne renseigne l’attaquant.
+Avoid making the duration or sequence of instructions dependent on tested bytes (e.g. early exit as soon as a mismatching character is found).
+Thus no visible difference in the power trace or timing leaks information to the attacker.
 
-### 2. Masquage / opérations indépendantes des bits sensibles
+### 2. Masking / data-independent operations
 
-Rendre la consommation instantanée indépendante des valeurs traitées en utilisant des transformations aléatoires (masks)
-qui annulent l’effet du secret sur la consommation.
+Make instantaneous power consumption independent of processed values by using random transformations (masks) that cancel the effect of the secret on consumption
 
-### 3. Ajout de bruit (alimentation filtrée, condensateurs, blindage EM) et random delays
+### 3. Add noise (filtered supply, capacitors, EM shielding) and random delays
 
-Augmenter le rapport signal/bruit pour rendre la lecture SPA/DPA plus difficile  (via le matériel et via techniques logicielles).
+Increase the signal-to-noise ratio threshold required for SPA/DPA (via hardware and software techniques) to make power analysis harder.
 
-### 4. Détection d’analyse (watchdog / brown-out / détection alim perturbée)
+### 4. Analysis detection (watchdog / brown-out / supply perturbation detection)
 
-Détecter des conditions anormales (chute de tension, glitch, reset fréquent) et réagir (bloquer, effacer secret, entrer en mode sécurisé) pour empêcher ou rendre l’attaque destructrice.
+Detect abnormal conditions (voltage drops, glitches, frequent resets) and react (block, erase secret, enter secure mode) to prevent or make the attack destructive.
