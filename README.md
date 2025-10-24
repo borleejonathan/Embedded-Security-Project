@@ -155,26 +155,18 @@ CVSS v4.0 Score: 1.5 (Low)
 
 ### 1. Exécution en temps constant (no early-exit)
 
-Principe: 
-
 Eviter que la durée ou la séquence d’instructions dépende des octets testés (ex: exit anticipé dès qu’un caractère ne correspond pas).
 Ainsi aucune différence visible dans la trace de puissance ou le timing ne renseigne l’attaquant.
 
 ### 2. Masquage / opérations indépendantes des bits sensibles
-  
-Principe: 
 
 Rendre la consommation instantanée indépendante des valeurs traitées en utilisant des transformations aléatoires (masks)
 qui annulent l’effet du secret sur la consommation.
 
 ### 3. Ajout de bruit (alimentation filtrée, condensateurs, blindage EM) et random delays
 
-Principe: 
-
 Augmenter le rapport signal/bruit pour rendre la lecture SPA/DPA plus difficile  (via le matériel et via techniques logicielles).
 
 ### 4. Détection d’analyse (watchdog / brown-out / détection alim perturbée)
-
-Principe: 
 
 Détecter des conditions anormales (chute de tension, glitch, reset fréquent) et réagir (bloquer, effacer secret, entrer en mode sécurisé) pour empêcher ou rendre l’attaque destructrice.
